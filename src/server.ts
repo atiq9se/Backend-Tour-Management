@@ -1,24 +1,23 @@
-
 import { Server } from "http";
-import mongoose = require("mongoose");
-import app = require("./app");
+import mongoose from "mongoose";
+import app from "./app";
 
 let server: Server;
 
 const startServer = async () => {
-     try{
-        await mongoose.connect("mongodb://localhost:27017")
-
+    try {
+        await mongoose.connect("mongodb+srv://atiq9se_db_user:nmxlKB9oFBHPNbuJ@cluster0.jaby5lr.mongodb.net/tour-db");
         console.log("connected to DB");
 
-        server = app.listen(5000, ()=> {
-            console.log("Server is listenting to port 5000")
+        server = app.listen(5000, () => {
+            console.log("Server is listening on port 5000");
         });
-     } catch(error){
+    } catch (error) {
         console.log(error);
-     }
-}
-startServer()
+    } 
+};
+
+startServer();
 
 process.on("unhandledRejection", ()=>{
     console.log("Unhandled Rejection detected... Server shutting down...");

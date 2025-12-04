@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status-codes";
 import userService = require("./user.service");
 
-const createUser = async(req: Request, res: Response) => {
+const createUser = async(req: Request, res: Response, next: NextFunction) => {
     try{
        const user = await userService.UserServices.createUser(req.body)
 
@@ -12,10 +12,7 @@ const createUser = async(req: Request, res: Response) => {
         })
     } catch (err: any){
         console.log(err);
-        res.status(httpStatus.BAD_REQUEST).json({
-            message: `Something went wrong!! ${err.message}`,
-
-        })
+        next(err);
     }
 }
 

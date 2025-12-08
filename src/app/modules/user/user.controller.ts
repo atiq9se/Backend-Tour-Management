@@ -4,15 +4,24 @@ import userService = require("./user.service");
 import AppError from "../../errorHelpers/AppError";
 import UserServices = require("./user.service");
 import catchAsync = require("../../utils/catchAsync");
+import sendResponse = require("../../utils/sendResponse");
 
 
 
 const createUser = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction)=>{
     const user = await userService.UserServices.createUser(req.body)
-    res.status(httpStatus.CREATED).json({
-        message: "User Created Success Fully",
-        user
+
+    sendResponse.sendResponse(res,{
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "User Created Successfully",
+        data: user,
     })
+
+    // res.status(httpStatus.CREATED).json({
+    //     message: "User Created Success Fully",
+    //     user
+    // })
 })
 
 // const createUser = async(req: Request, res: Response, next: NextFunction) => {
@@ -42,14 +51,23 @@ const createUser = catchAsync.catchAsync(async (req: Request, res: Response, nex
 //     }
 // }
 
-const getAllUsers = catchAsync( async (req: Request, res: Response, next: NextFunction)=>{
+const getAllUsers = catchAsync.catchAsync( async (req: Request, res: Response, next: NextFunction)=>{
     
-        const users = await userService.UserServices.getAllUsers();
-        res.status(httpStatus.OK).json({
+        const result = await userService.UserServices.getAllUsers();
+
+        sendResponse.sendResponse(res,{
             success: true,
-            message: "all users retrived successfully",
-            data: users
+            statusCode: httpStatus.CREATED,
+            message: "All user retrived Successfully",
+            data: result.data,
+            meta: result.meta
         })
+
+        // res.status(httpStatus.OK).json({
+        //     success: true,
+        //     message: "all users retrived successfully",
+        //     data: users
+        // })
 }) 
     
 

@@ -8,7 +8,7 @@ export const validateRequest = (zodSchema: AnyZodObject) =>
             console.log("old body", req.body)
             req.body = await zodSchema.parseAsync(req.body)
             console.log(" body", req.body)
-            // next()
+            next()
         }catch(error){
             next(error)
         }

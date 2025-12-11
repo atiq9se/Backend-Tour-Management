@@ -1,5 +1,7 @@
 import z from "zod";
-import userInterface = require("./user.interface");
+import userInterface from "./user.interface";
+import Role = require("./user.interface");
+import IsActive = require("./user.interface");
 
 export const createUserZodSchema = z.object({
         name: z
@@ -78,7 +80,7 @@ export const createUserZodSchema = z.object({
         isVerified: z
             .boolean({ invalid_type_error: "isDeleted nust be true or false"})
             .optional(),
-            
+
         address: z
                  .string({ invalid_type_error: "Email must be string"})
                  .max(100, { message: "Email cannot exceed 100 characters."})

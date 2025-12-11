@@ -1,5 +1,6 @@
 import { Router } from "express";
 import userRoute = require("../modules/user/user.route");
+import authRoute = require("../modules/auth/auth.route");
 
 
 export const router = Router();
@@ -8,6 +9,10 @@ const moduleRoutes = [
     {
         path: "/user",
         route: userRoute.UserRoutes
+    },
+    {
+        path: "/auth",
+        route: authRoute.AuthRoutes
     },
 ]
 

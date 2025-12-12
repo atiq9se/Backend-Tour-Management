@@ -3,11 +3,8 @@ import type userInterface = require("../user/user.interface");
 import httpStatus from "http-status-codes";
 import userModel = require("../user/user.model");
 import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
-import jwt = require("../../utils/jwt");
-import generateToken = require("../../utils/jwt");
+import jwts = require("../../utils/jwt");
 import env = require("../../config/env");
-import envVars = require("../../config/env");
 
 
 const credentialsLogin = async(payload: Partial<userInterface.IUser>)=>{
@@ -31,7 +28,7 @@ const credentialsLogin = async(payload: Partial<userInterface.IUser>)=>{
         role: isUserExist.role
     }
 
-    const accessToken = generateToken(jwtPayload, env.envVars.JWT_ACCESS_SECRET, env.envVars.JWT_ACCESS_EXPIRES)
+    const accessToken = jwts.generateToken(jwtPayload, env.envVars.JWT_ACCESS_SECRET, env.envVars.JWT_ACCESS_EXPIRES)
 
     return {
         accessToken

@@ -1,6 +1,7 @@
 import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
+import seedSuperAdmin = require("./app/utils/seedSuperAdmin");
 
 let server: Server;
 
@@ -17,7 +18,10 @@ const startServer = async () => {
     } 
 };
 
-startServer();
+(async()=>{
+    await startServer();
+    await seedSuperAdmin.seedSuperAdmin()
+})()
 
 process.on("unhandledRejection", ()=>{
     console.log("Unhandled Rejection detected... Server shutting down...");

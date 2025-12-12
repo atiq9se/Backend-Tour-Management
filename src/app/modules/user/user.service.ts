@@ -1,3 +1,4 @@
+import env = require("../../config/env");
 import { IAuthProvider, IUser } from "./user.interface";
 import { User } from "./user.model";
 import bcryptjs from "bcryptjs";
@@ -12,7 +13,7 @@ const createUser = async (payload: Partial<IUser>)=> {
         throw new AppError(httpStatus.BAD_REQUEST, "User Already Exist")
     }
     
-    const hashPassword = await bcryptjs.hash(password as string, 10)
+    const hashPassword = await bcryptjs.hash(password as string, Number(env.envVars.BCRYPT_SALT_ROUND))
 
     const authProvider : IAuthProvider = { provider: "credentials", providerId: email as string }
 

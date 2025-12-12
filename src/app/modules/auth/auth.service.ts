@@ -28,7 +28,7 @@ const credentialsLogin = async(payload: Partial<userInterface.IUser>)=>{
     }
 
     const accessToken = jwt.sign(jwtPayload, "secret", {
-        expiresIn: "1d"
+        expiresIn: "2s"
     })
 
     return {

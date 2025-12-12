@@ -1,14 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status-codes";
 import userService = require("./user.service");
-import AppError from "../../errorHelpers/AppError";
-import UserServices = require("./user.service");
-import catchAsync = require("../../utils/catchAsync");
 import sendResponse = require("../../utils/sendResponse");
+import { catchAsync } from "../../utils/catchAsync";
 
 
 
-const createUser = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction)=>{
+const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction)=>{
     const user = await userService.UserServices.createUser(req.body)
 
     sendResponse.sendResponse(res,{
@@ -51,7 +49,7 @@ const createUser = catchAsync.catchAsync(async (req: Request, res: Response, nex
 //     }
 // }
 
-const getAllUsers = catchAsync.catchAsync( async (req: Request, res: Response, next: NextFunction)=>{
+const getAllUsers = catchAsync( async (req: Request, res: Response, next: NextFunction)=>{
     
         const result = await userService.UserServices.getAllUsers();
 

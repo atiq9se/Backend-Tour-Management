@@ -82,7 +82,7 @@ export const createUserZodSchema = z.object({
             .optional(),
 
         address: z
-                 .string({ invalid_type_error: "Email must be string"})
-                 .max(100, { message: "Email cannot exceed 100 characters."})
-                 .optional()
+            .string({ invalid_type_error: "Email must be string"})
+            .max(100, { message: "Email cannot exceed 100 characters."})
+            .optional()
      })

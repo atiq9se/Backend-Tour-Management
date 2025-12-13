@@ -28,8 +28,9 @@ const createUser = catchAsync(async (req: Request, res: Response, next: NextFunc
 const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunction)=>{
 
     const userId = req.params.id;
-    const token = req.headers.authorization
-    const verifiedToken = jwt.verifyToken(token as string, env.envVars.JWT_ACCESS_SECRET) as jsonwebtoken.JwtPayload
+    // const token = req.headers.authorization
+    // const verifiedToken = jwt.verifyToken(token as string, env.envVars.JWT_ACCESS_SECRET) as jsonwebtoken.JwtPayload
+    const verifiedToken = req.user;
     const payload = req.body;
 
     const user = await userService.UserServices.updateUser(userId, payload, verifiedToken)

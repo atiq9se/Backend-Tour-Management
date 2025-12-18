@@ -5,6 +5,7 @@ import userModel = require("../user/user.model");
 import bcryptjs from "bcryptjs";
 import jwts = require("../../utils/jwt");
 import env = require("../../config/env");
+import userToken = require("../../utils/userToken");
 
 
 const credentialsLogin = async(payload: Partial<userInterface.IUser>)=>{
@@ -22,21 +23,23 @@ const credentialsLogin = async(payload: Partial<userInterface.IUser>)=>{
         throw new AppError(httpStatus.BAD_REQUEST, "Incorrect Password")
     }
 
-    const jwtPayload = {
-        userId: isUserExist._id,
-        email: isUserExist.email,
-        role: isUserExist.role
-    }
+    // const jwtPayload = {
+    //     userId: isUserExist._id,
+    //     email: isUserExist.email,
+    //     role: isUserExist.role
+    // }
 
-    const accessToken = jwts.generateToken(jwtPayload, env.envVars.JWT_ACCESS_SECRET, env.envVars.JWT_ACCESS_EXPIRES)
+    // const accessToken = jwts.generateToken(jwtPayload, env.envVars.JWT_ACCESS_SECRET, env.envVars.JWT_ACCESS_EXPIRES)
 
-    const refreshToken = jwts.generateToken(jwtPayload, env.envVars.JWT_REFRESH_SECRET, env.envVars.JWT_REFRESH_EXPIRES)
+    // const refreshToken = jwts.generateToken(jwtPayload, env.envVars.JWT_REFRESH_SECRET, env.envVars.JWT_REFRESH_EXPIRES)
+
+    const userTokens= userToken.createUserTokens(isUserExist)
 
     const {password: pass, ...rest} = isUserExist
 
     return {
-        accessToken,
-        refreshToken,
+        accessToken:userTokens.accessToken,
+        refreshToken: userTokens.refreshToken,
         user: rest
     }
 

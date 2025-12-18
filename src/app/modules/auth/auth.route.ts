@@ -4,5 +4,6 @@ import authController = require("./auth.controller");
 const router = Router();
 
 router.post("/login", authController.AuthControllers.credentialsLogin)
+router.post("/refresh-token", authController.AuthControllers.credentialsLogin)
 
 export const AuthRoutes = router;

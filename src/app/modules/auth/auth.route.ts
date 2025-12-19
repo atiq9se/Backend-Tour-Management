@@ -1,9 +1,9 @@
 import{ Router } from "express";
-import authController = require("./auth.controller");
+import { AuthControllers } from "./auth.controller";
 
 const router = Router();
 
-router.post("/login", authController.AuthControllers.credentialsLogin)
-router.post("/refresh-token", authController.AuthControllers.credentialsLogin)
+router.post("/login", AuthControllers.credentialsLogin)
+router.post("/refresh-token", AuthControllers.getNewAccessToken)
 
 export const AuthRoutes = router;

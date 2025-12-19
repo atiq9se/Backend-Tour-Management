@@ -1,6 +1,6 @@
 import env = require("../config/env");
 import type userInterface = require("../modules/user/user.interface");
-import jwts = require("../../utils/jwt");
+import jwts = require("../utils/jwt");
 
 export const createUserTokens = (user: Partial<userInterface.IUser>)=>{
     

@@ -5,11 +5,12 @@ import { AuthServices } from "./auth.service";
 import catchAsync = require("../../utils/catchAsync");
 import sendResponse = require("../../utils/sendResponse");
 import AppError from "../../errorHelpers/AppError";
+import { setAuthCookie } from "../../utils/setCookie";
 
 const credentialsLogin = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const loginInfo = await AuthServices.credentialsLogin(req.body);
 
-  
+  setAuthCookie(res, loginInfo)
 
   sendResponse.sendResponse(res, {
     success: true,
@@ -26,6 +27,8 @@ const getNewAccessToken = catchAsync.catchAsync(async (req: Request, res: Respon
   }
 
   const tokenInfo = await AuthServices.getNewAccessToken(refreshToken as string)
+
+  setAuthCookie(res, tokenInfo);
 
   sendResponse.sendResponse(res, {
     success: true,

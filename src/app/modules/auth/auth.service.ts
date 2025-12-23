@@ -10,7 +10,8 @@ import verifyToken = require("../../utils/jwt");
 import envVars = require("../../config/env");
 import type jsonwebtoken = require("jsonwebtoken");
 import IsActive = require("../user/user.interface");
-import { createNewAccessTokenWithRefreshToken } from "../../utils/userToken";
+import createNewAccessTokenWithRefreshToken = require("../../utils/userToken");
+
 
 
 const credentialsLogin = async (payload: Partial<IUser>) => {

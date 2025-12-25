@@ -9,6 +9,13 @@ import cookieParser from "cookie-parser"
 
 const app = express();
 
+app.use(expressSession(){
+    secret: "Your secret",
+    resave: false,
+    saveUniitialized: false
+})
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(cookieParser())
 app.use(express.json());
 app.use(cors())

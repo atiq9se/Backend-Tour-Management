@@ -1,5 +1,5 @@
 import passport = require("passport");
-import {Strategy as GoogleStrategy } from "passport-google-oauth20";
+import {Strategy as GoogleStrategy, VerifyCallback, Profile } from "passport-google-oauth20";
 import env = require("./env");
 
 passport.use(
@@ -8,6 +8,12 @@ passport.use(
             clientID: env.envVars.GOOGLE_CLIENT_ID,
             clientSecret: env.envVars.GOOGLE_CLIENT_SECRET,
             callbackURL: env.envVars.GOOGLE_CALLBACK_URL
-        }, async()=>{}
+        }, async(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback)=>{
+            try{
+
+            } catch(error){
+                
+            }
+        }
     )
 )

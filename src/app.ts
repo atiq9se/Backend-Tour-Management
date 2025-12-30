@@ -6,14 +6,17 @@ import env = require("./app/config/env");
 import globalErrorHandler = require("./app/middlewares/globalErrorHandler");
 import notFound from  "./app/middlewares/notFound";
 import cookieParser from "cookie-parser"
+import expressSession from "express-session";
+import passport from "passport";
+import "./app/config/passport";
 
 const app = express();
 
-app.use(expressSession(){
+app.use(expressSession({
     secret: "Your secret",
     resave: false,
-    saveUniitialized: false
-})
+    saveUninitialized: false
+}))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cookieParser())

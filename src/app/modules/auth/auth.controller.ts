@@ -6,6 +6,9 @@ import catchAsync = require("../../utils/catchAsync");
 import sendResponse = require("../../utils/sendResponse");
 import AppError from "../../errorHelpers/AppError";
 import { setAuthCookie } from "../../utils/setCookie";
+import userToken = require("../../utils/userToken");
+import env = require("../../config/env");
+import type jsonwebtoken = require("jsonwebtoken");
 
 const credentialsLogin = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const loginInfo = await AuthServices.credentialsLogin(req.body);
@@ -64,7 +67,7 @@ const resetPassword = catchAsync.catchAsync(async (req: Request, res: Response, 
   const oldPassword = req.body.oldPassword;
   const decodedToken = req.user;
 
- await AuthServices.resetPassword(oldPassword as string, newPassword as string, decodedToken)
+  await AuthServices.resetPassword(oldPassword as string, newPassword as string, decodedToken as jsonwebtoken.JwtPayload)
 
   sendResponse.sendResponse(res, {
     success: true,
@@ -74,9 +77,25 @@ const resetPassword = catchAsync.catchAsync(async (req: Request, res: Response, 
   });
 });
 
+const googleCallbackController = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+  const user = req.user as any;
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "user not found")
+  }
+  const tokenInfo = userToken.createUserTokens(user)
+  setAuthCookie(res, tokenInfo)
+
+  res.redirect(env.envVars.FRONTEND_URL)
+});
+
+
+
 export const AuthControllers = {
   credentialsLogin,
   getNewAccessToken,
   resetPassword,
-  logout
+  logout,
+  googleCallbackController
 };

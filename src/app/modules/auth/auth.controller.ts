@@ -9,18 +9,37 @@ import { setAuthCookie } from "../../utils/setCookie";
 import userToken = require("../../utils/userToken");
 import env = require("../../config/env");
 import type jsonwebtoken = require("jsonwebtoken");
+import passport = require("passport");
 
 const credentialsLogin = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const loginInfo = await AuthServices.credentialsLogin(req.body);
+  // const loginInfo = await AuthServices.credentialsLogin(req.body);
 
-  setAuthCookie(res, loginInfo)
+  passport.authenticate("local", async (err: any, user: any, info: any) => {
+    if (err) {
+      // return next(err)
+      return next(new AppError(401, err))
+    }
+    if (!user) {
+      return next(new AppError(401, info.message))
+    }
 
-  sendResponse.sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.CREATED,
-    message: "User login successfully",
-    data: loginInfo,
-  });
+    const userTokens = await userToken.createUserTokens(user)
+
+
+    const { password: pass, ...rest } = user.toObject()
+
+    setAuthCookie(res, userTokens)
+
+    sendResponse.sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: "User login successfully",
+      data: {
+        accessToken: userTokens.accessToken,
+        refreshToken: userTokens.refreshToken
+      }
+    });
+  })(req, res, next);
 });
 
 const getNewAccessToken = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -79,11 +98,11 @@ const resetPassword = catchAsync.catchAsync(async (req: Request, res: Response, 
 
 const googleCallbackController = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-   let redirectTo = req.query.state? req.query.state as string: ""
+  let redirectTo = req.query.state ? req.query.state as string : ""
 
-   if(redirectTo.startsWith("/")){
+  if (redirectTo.startsWith("/")) {
     redirectTo = redirectTo.slice(1)
-   }
+  }
 
 
   const user = req.user as any;

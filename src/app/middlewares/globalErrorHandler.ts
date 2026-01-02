@@ -3,11 +3,51 @@ import env = require("../config/env")
 import AppError from "../errorHelpers/AppError";
 
 
-export const globalErrorHandler = (err: any, req: e.Request, res: Response, next: NextFunction)=> {
+export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction)=> {
+    
+    /**
+     * Mongoose
+     * zod
+     */
+
+    /**
+     * Mongoose
+     * - duplicate
+     * - cast error
+     * - validation
+     */
+
+    const errorSources: any = []
+
     let statusCode = 500
     let message = `Something went wrong!!`
 
-    if(err instanceof AppError){
+    //Duplicate error
+    if(err.code === 11000){
+        console.log("Duplicate error", err.message);
+        const duplicate = err.message.match(/"([^"]*)"/)
+        statusCode = 400;
+        message = `${duplicate[1]} already exists!!`
+    }
+    //Object ID error / Cast Error
+    else if(err.name === "CastError"){
+        statusCode = 400;
+        message = "Invalid MongoDB ObjectID. Please provide a valid id"
+    }
+
+    else if(err.name === "ValidationError"){
+        statusCode = 400;
+        const errors = Object.values(err.errors)
+
+        errors.forEach((errorObject: any)=> errorSources.push({
+            path: errorObject.path,
+            message: errorObject.message
+        }))
+
+        message = "Validation Error"
+    }
+
+    else if(err instanceof AppError){
         statusCode = err.statusCode
         message = err.message
     }else if (err instanceof Error) {
@@ -18,7 +58,8 @@ export const globalErrorHandler = (err: any, req: e.Request, res: Response, next
     res.status(statusCode).json({
         success: false,
         message,
-        err, 
+        errorSources,
+        // err, 
         stack: env.envVars.NODE_ENV === "development" ? null : err.stack
     })
 }

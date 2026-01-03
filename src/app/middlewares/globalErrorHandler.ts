@@ -12,7 +12,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     if(env.envVars.NODE_ENV === "development"){
         console.log(err)
     }
-    
+
     let errorSources: TErrorSources[] = []
     let statusCode = 500
     let message = `Something went wrong!!`
@@ -59,6 +59,6 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
         message,
         errorSources,
         err: env.envVars.NODE_ENV === "development" ? err: null, 
-        stack: env.envVars.NODE_ENV === "development" ? null : err.stack
+        stack: env.envVars.NODE_ENV === "development" ? err.stack : null
     })
 }

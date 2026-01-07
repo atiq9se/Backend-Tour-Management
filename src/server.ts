@@ -15,57 +15,58 @@ const startServer = async () => {
         });
     } catch (error) {
         console.log(error);
-    } 
+    }
 };
 
-(async()=>{
+(async () => {
     await startServer();
     await seedSuperAdmin.seedSuperAdmin()
 })()
 
-process.on("unhandledRejection", ()=>{
+process.on("unhandledRejection", (err) => {
+    console.log("Unhandled Rejection detected:", err);
+    console.log("Server shutting down...");
+
+    if (server) {
+        server.close(() => {
+            process.exit(1)
+        });
+    }
+
+    process.exit(1)
+})
+
+process.on("uncaughtException", () => {
     console.log("Unhandled Rejection detected... Server shutting down...");
 
-    if(server){
-        server.close(()=>{
-           process.exit(1)
+    if (server) {
+        server.close(() => {
+            process.exit(1)
         });
     }
 
     process.exit()
 })
 
-process.on("uncaughtException", ()=>{
-    console.log("Unhandled Rejection detected... Server shutting down...");
 
-    if(server){
-        server.close(()=>{
-           process.exit(1)
-        });
-    }
-
-    process.exit()
-})
-
-
-process.on("SIGTERM", ()=>{
+process.on("SIGTERM", () => {
     console.log("SIGTERM signal recieved... Server shutting down...");
 
-    if(server){
-        server.close(()=>{
-           process.exit(1)
+    if (server) {
+        server.close(() => {
+            process.exit(1)
         });
     }
 
     process.exit()
 })
 
-process.on("SIGINT", ()=>{
+process.on("SIGINT", () => {
     console.log("SIGINT signal recieved... Server shutting down...");
 
-    if(server){
-        server.close(()=>{
-           process.exit(1)
+    if (server) {
+        server.close(() => {
+            process.exit(1)
         });
     }
 

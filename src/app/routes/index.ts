@@ -1,6 +1,8 @@
 import { Router } from "express";
-import userRoute = require("../modules/user/user.route");
-import authRoute = require("../modules/auth/auth.route");
+import {UserRoutes} from "../modules/user/user.route";
+import {AuthRoutes} from "../modules/auth/auth.route";
+import {DivisionRoutes} from "../modules/division/division.route";
+import {TourRoutes} from "../modules/tour/tour.route";
 
 
 export const router = Router();
@@ -8,12 +10,20 @@ export const router = Router();
 const moduleRoutes = [
     {
         path: "/user",
-        route: userRoute.UserRoutes
+        route: UserRoutes
     },
     {
         path: "/auth",
-        route: authRoute.AuthRoutes
+        route: AuthRoutes
     },
+    {
+        path: "/division",
+        route: DivisionRoutes
+    },
+    {
+        path: "/tour",
+        route: TourRoutes
+    }
 ]
 
 moduleRoutes.forEach((route)=>{

@@ -1,10 +1,9 @@
-import passport = require("passport");
-import { Strategy as GoogleStrategy, VerifyCallback, Profile } from "passport-google-oauth20";
-import env = require("./env");
-import userInterface = require("../modules/user/user.interface");
+import passport from "passport";
+import { Strategy as GoogleStrategy, type VerifyCallback,type Profile } from "passport-google-oauth20";
 import { User } from "../modules/user/user.model";
 import { Strategy as LocalStrategy } from "passport-local";
-import bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
+import { envVars } from "./env.js";
 
 passport.use(
     new LocalStrategy(
@@ -46,9 +45,9 @@ passport.use(
 passport.use(
     new GoogleStrategy(
         {
-            clientID: env.envVars.GOOGLE_CLIENT_ID,
-            clientSecret: env.envVars.GOOGLE_CLIENT_SECRET,
-            callbackURL: env.envVars.GOOGLE_CALLBACK_URL
+            clientID: envVars.GOOGLE_CLIENT_ID,
+            clientSecret: envVars.GOOGLE_CLIENT_SECRET,
+            callbackURL: envVars.GOOGLE_CALLBACK_URL
         }, async (accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
             try {
                 const email = profile.emails?.[0].value;

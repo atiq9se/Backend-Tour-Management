@@ -1,5 +1,5 @@
-import { IDivision } from "./division.interface";
-import { Division } from "./division.model";
+import { type IDivision } from "./division.interface.js";
+import { Division } from "./division.model.js";
 
 const createDivision = async (payload: IDivision) => {
 

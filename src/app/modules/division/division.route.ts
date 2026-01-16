@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { checkAuth } from "../../middlewares/checkAuth";
-import { validateRequest } from "../../middlewares/validateRequest";
-import { Role } from "../user/user.interface";
-import { DivisionController } from "./division.controller";
+import { checkAuth } from "../../middlewares/checkAuth.js";
+import { validateRequest } from "../../middlewares/validateRequest.js";
+import { Role } from "../user/user.interface.js";
+import { DivisionController } from "./division.controller.js";
 import {
     createDivisionSchema,
     updateDivisionSchema,
-} from "./division.validation";
+} from "./division.validation.js";
 
 const router = Router()
 

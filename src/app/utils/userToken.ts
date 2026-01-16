@@ -1,11 +1,11 @@
-import env = require("../config/env");
-import { IUser } from "../modules/user/user.interface";
-import userModel = require("../modules/user/user.model");
-import jwts = require("../utils/jwt");
+
 import AppError from "../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
-import IsActive = require("../modules/user/user.interface");
 import type jsonwebtoken = require("jsonwebtoken");
+import { User } from "../modules/user/user.model.js";
+import { IsActive, type IUser } from "../modules/user/user.interface.js";
+import { envVars } from "../config/env.js";
+import { generateToken, verifyToken } from "./jwt";
 
 export const createUserTokens = (user: Partial<IUser>) => {
     const jwtPayload = {
@@ -14,9 +14,9 @@ export const createUserTokens = (user: Partial<IUser>) => {
         role: user.role
     }
 
-    const accessToken = jwts.generateToken(jwtPayload, env.envVars.JWT_ACCESS_SECRET, env.envVars.JWT_ACCESS_EXPIRES)
+    const accessToken = generateToken(jwtPayload, envVars.JWT_ACCESS_SECRET, envVars.JWT_ACCESS_EXPIRES)
 
-    const refreshToken = jwts.generateToken(jwtPayload, env.envVars.JWT_REFRESH_SECRET, env.envVars.JWT_REFRESH_EXPIRES)
+    const refreshToken = generateToken(jwtPayload, envVars.JWT_REFRESH_SECRET, envVars.JWT_REFRESH_EXPIRES)
 
     return {
         accessToken,
@@ -25,9 +25,9 @@ export const createUserTokens = (user: Partial<IUser>) => {
 }
 
 export const createNewAccessTokenWithRefreshToken = async (refreshToken: string) => {
-    const verifiedRefreshToken = jwts.verifyToken(refreshToken, env.envVars.JWT_REFRESH_SECRET) as jsonwebtoken.JwtPayload
+    const verifiedRefreshToken = verifyToken(refreshToken, envVars.JWT_REFRESH_SECRET) as jsonwebtoken.JwtPayload
 
-    const isUserExist = await userModel.User.findOne({ email: verifiedRefreshToken.email })
+    const isUserExist = await User.findOne({ email: verifiedRefreshToken.email })
 
     if (!isUserExist) {
         throw new AppError(httpStatus.BAD_REQUEST, "Email does not exist")
@@ -45,7 +45,7 @@ export const createNewAccessTokenWithRefreshToken = async (refreshToken: string)
         role: isUserExist.role
     }
 
-    const accessToken = jwts.generateToken(jwtPayload, env.envVars.JWT_ACCESS_SECRET, env.envVars.JWT_ACCESS_EXPIRES)
+    const accessToken = generateToken(jwtPayload, envVars.JWT_ACCESS_SECRET, envVars.JWT_ACCESS_EXPIRES)
 
     return accessToken
 }

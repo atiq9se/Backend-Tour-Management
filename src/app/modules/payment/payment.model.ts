@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import  {IPayment} from "./payment.interface";
+import  { type IPayment} from "./payment.interface";
 import { PAYMENT_STATUS } from "./payment.interface";
 
 const paymentSchema = new Schema<IPayment>({
@@ -34,4 +34,4 @@ const paymentSchema = new Schema<IPayment>({
     timestamps: true
 })
 
-export const Booking = model<IBooking>("Booking", bookingSchema)
+export const Payment = model<IPayment>("Payment", paymentSchema)

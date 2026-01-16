@@ -1,16 +1,16 @@
-import type { Request, Response, NextFunction } from "express";
+import type { type Response } from "express";
+import { envVars } from "../config/env.js";
 
 export interface AuthTokens {
     accessToken?: string;
     refreshToken?: string;
 }
-import env = require("../config/env");
 
 export const setAuthCookie = (res: Response, tokenInfo: AuthTokens) => {
     const cookieOptions = {
         httpOnly: true,
-        secure: env.envVars.NODE_ENV === 'production',
-        sameSite: env.envVars.NODE_ENV === 'production' ? 'none' : 'lax' as 'none' | 'lax' | 'strict',
+        secure: envVars.NODE_ENV === 'production',
+        sameSite: envVars.NODE_ENV === 'production' ? 'none' : 'lax' as 'none' | 'lax' | 'strict',
     };
 
     if (tokenInfo.accessToken) {

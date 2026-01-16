@@ -1,22 +1,16 @@
 import AppError from "../../errorHelpers/AppError";
-import { IUser } from "../user/user.interface";
 import httpStatus from "http-status-codes";
-import userModel = require("../user/user.model");
 import bcryptjs from "bcryptjs";
-import jwts = require("../../utils/jwt");
-import env = require("../../config/env");
-import userToken = require("../../utils/userToken");
-import verifyToken = require("../../utils/jwt");
-import envVars = require("../../config/env");
-import type jsonwebtoken = require("jsonwebtoken");
-import IsActive = require("../user/user.interface");
-import createNewAccessTokenWithRefreshToken = require("../../utils/userToken");
-import { JwtPayload } from "jsonwebtoken";
+import { User } from "../user/user.model.js";
+import type { JwtPayload } from "jsonwebtoken";
+import { createNewAccessTokenWithRefreshToken, createUserTokens } from "../../utils/userToken.js";
+import { envVars } from "../../config/env.js";
+import type { IUser } from "../user/user.interface.js";
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
     const { email, password } = payload;
 
-    const isUserExist = await userModel.User.findOne({ email })
+    const isUserExist = await User.findOne({ email })
 
     if (!isUserExist) {
         throw new AppError(httpStatus.BAD_REQUEST, "Email does not exist")
@@ -28,7 +22,7 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
         throw new AppError(httpStatus.BAD_REQUEST, "Incorrect Password")
     }
 
-    const userTokens = userToken.createUserTokens(isUserExist)
+    const userTokens = createUserTokens(isUserExist)
 
     const { password: pass, ...rest } = isUserExist.toObject()
 
@@ -49,14 +43,14 @@ const getNewAccessToken = async (refreshToken: string) => {
 
 const resetPassword = async (oldPassword: string, newPassword: string, decodedToken:JwtPayload) => {
 
-    const user = await userModel.User.findById(decodedToken.userId)
+    const user = await User.findById(decodedToken.userId)
 
     const isOldPasswordMatch = await bcryptjs.compare(oldPassword, user!.password as string)
     if(!isOldPasswordMatch){
         throw new AppError(httpStatus.UNAUTHORIZED, "old password does not match");
     }
 
-    user!.password = await bcryptjs.hash(newPassword, Number(env.envVars.BCRYPT_SALT_ROUND))
+    user!.password = await bcryptjs.hash(newPassword, Number(envVars.BCRYPT_SALT_ROUND))
 
     user!.save();
 }

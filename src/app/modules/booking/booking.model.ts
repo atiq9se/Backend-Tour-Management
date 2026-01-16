@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { IBooking } from "./booking.interface";
+import { type IBooking } from "./booking.interface";
 import {BOOKING_STATUS } from "./booking.interface";
 import { model } from "mongoose";
 
@@ -16,8 +16,7 @@ const bookingSchema = new Schema<IBooking>({
     },
     payment: {
         type: Schema.Types.ObjectId,
-        ref: "Payment",
-        required: true,
+        ref: "Payment"
     },
     status: {
         type: String,

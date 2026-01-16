@@ -1,13 +1,13 @@
 import express from "express";
-import { checkAuth } from "../../middlewares/checkAuth";
-import { validateRequest } from "../../middlewares/validateRequest";
-import { Role } from "../user/user.interface";
-import { TourController } from "./tour.controller";
+import { checkAuth } from "../../middlewares/checkAuth.js";
+import { validateRequest } from "../../middlewares/validateRequest.js";
+import { Role } from "../user/user.interface.js";
+import { TourController } from "./tour.controller.js";
 import {
     createTourTypeZodSchema,
     createTourZodSchema,
     updateTourZodSchema,
-} from "./tour.validation";
+} from "./tour.validation.js";
 
 const router = express.Router();
 

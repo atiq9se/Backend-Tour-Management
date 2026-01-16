@@ -1,10 +1,10 @@
-import Types = require("mongoose");
+import { Types } from "mongoose";
 
 export enum Role {
     SUPER_ADMIN = "SUPER_ADMIN",
-    ADMIN      = "ADMIN",
-    USER       = "USER",
-    GUIDE      = "GUIDE"
+    ADMIN = "ADMIN",
+    USER = "USER",
+    GUIDE = "GUIDE"
 }
 
 export interface IAuthProvider {
@@ -19,7 +19,7 @@ export enum IsActive {
 }
 
 export interface IUser {
-    _id? : Types.ObjectId,
+    _id?: Types.ObjectId,
     name: string;
     email: string;
     age: number;
@@ -28,8 +28,8 @@ export interface IUser {
     picture?: string;
     address?: string;
     isDeleted?: string;
-    isActive? : IsActive;
-    isVerified ?: boolean;
+    isActive?: IsActive;
+    isVerified?: boolean;
     role: Role;
     auths: IAuthProvider[];
     bookings?: Types.ObjectId[];

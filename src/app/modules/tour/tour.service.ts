@@ -1,8 +1,9 @@
 
-import { QueryBuilder } from "../../utils/QueryBuilder";
-import { tourSearchableFields } from "./tour.constant";
-import { ITour, ITourType } from "./tour.interface";
-import { Tour, TourType } from "./tour.model";
+
+import { QueryBuilder } from "../../utils/QueryBuilder.js";
+import { tourSearchableFields } from "./tour.constant.js";
+import { type ITour, type ITourType } from "./tour.interface.js";
+import { Tour, TourType } from "./tour.model.js";
 
 const createTour = async (payload: ITour) => {
     const existingTour = await Tour.findOne({ title: payload.title });
@@ -26,43 +27,7 @@ const createTour = async (payload: ITour) => {
 };
 
 
-const getAllTours = async(query: Record<string, string>)=>{
-    const filter = query;
-    const searchTerm = query.searchTerm || "";
-    const sort = query.sort || "-createdAt"
-     const page = query.page || 1
-     const limit = query.limit || 10
-     const skip = (number(page)-1) * Number(limit)
 
-    const fields = query.fields?.split(",").join(" ") || ""
-
-    //  delete filter["searchTerm"]
-    //  delete filter["sort"]
-
-     const excludeField = ["searchTerm", "sort"]
-
-     for(const field of excludefield){
-        delete filter[field]
-     }
-
-    const tourSearchableFields = ["title", "description", "location"]
-
-    const searchArray = {
-        $or: tourSearchableFields.map(field=> ({ [field]: {$regex: searchTerm, $options: "i"} }))
-    }
-
-    const tours = await Tour.find(searchArray).find(filter).sort("-location").select("title");
-
-    const totalTours = await Tour.countDocuments();
-
-    return{
-        data: tours,
-        meta: {
-            total: totalTours
-        }
-    }
-    
-}
 
 
 // const getAllToursOld = async (query: Record<string, string>) => {

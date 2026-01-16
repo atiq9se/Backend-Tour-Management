@@ -1,17 +1,17 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status-codes";
 
-import { AuthServices } from "./auth.service";
-import catchAsync = require("../../utils/catchAsync");
-import sendResponse = require("../../utils/sendResponse");
-import AppError from "../../errorHelpers/AppError";
-import { setAuthCookie } from "../../utils/setCookie";
-import userToken = require("../../utils/userToken");
-import env = require("../../config/env");
-import type jsonwebtoken = require("jsonwebtoken");
-import passport = require("passport");
+import { AuthServices } from "./auth.service.js";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { sendResponse } from "../../utils/sendResponse.js";
+import AppError from "../../errorHelpers/AppError.js";
+import { setAuthCookie } from "../../utils/setCookie.js";
+import * as userToken from "../../utils/userToken.js";
+import { envVars } from "../../config/env.js";
+import type jsonwebtoken from "jsonwebtoken";
+import passport from "passport";
 
-const credentialsLogin = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const credentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   // const loginInfo = await AuthServices.credentialsLogin(req.body);
 
   passport.authenticate("local", async (err: any, user: any, info: any) => {
@@ -30,7 +30,7 @@ const credentialsLogin = catchAsync.catchAsync(async (req: Request, res: Respons
 
     setAuthCookie(res, userTokens)
 
-    sendResponse.sendResponse(res, {
+    sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
       message: "User login successfully",
@@ -42,7 +42,7 @@ const credentialsLogin = catchAsync.catchAsync(async (req: Request, res: Respons
   })(req, res, next);
 });
 
-const getNewAccessToken = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
@@ -53,7 +53,7 @@ const getNewAccessToken = catchAsync.catchAsync(async (req: Request, res: Respon
 
   setAuthCookie(res, tokenInfo);
 
-  sendResponse.sendResponse(res, {
+  sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
     message: "User login successfully",
@@ -61,7 +61,7 @@ const getNewAccessToken = catchAsync.catchAsync(async (req: Request, res: Respon
   });
 });
 
-const logout = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   res.clearCookie("accessToken", {
     httpOnly: true,
     secure: false,
@@ -73,7 +73,7 @@ const logout = catchAsync.catchAsync(async (req: Request, res: Response, next: N
     sameSite: "lax"
   })
 
-  sendResponse.sendResponse(res, {
+  sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
     message: "User logout successfully",
@@ -81,14 +81,14 @@ const logout = catchAsync.catchAsync(async (req: Request, res: Response, next: N
   });
 });
 
-const resetPassword = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const newPassword = req.body.newPassword;
   const oldPassword = req.body.oldPassword;
   const decodedToken = req.user;
 
   await AuthServices.resetPassword(oldPassword as string, newPassword as string, decodedToken as jsonwebtoken.JwtPayload)
 
-  sendResponse.sendResponse(res, {
+  sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
     message: "Password change succefully",
@@ -96,7 +96,7 @@ const resetPassword = catchAsync.catchAsync(async (req: Request, res: Response, 
   });
 });
 
-const googleCallbackController = catchAsync.catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const googleCallbackController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
   let redirectTo = req.query.state ? req.query.state as string : ""
 
@@ -113,7 +113,7 @@ const googleCallbackController = catchAsync.catchAsync(async (req: Request, res:
   const tokenInfo = userToken.createUserTokens(user)
   setAuthCookie(res, tokenInfo)
 
-  res.redirect(`${env.envVars.FRONTEND_URL}/${redirectTo}`)
+  res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
 });
 
 

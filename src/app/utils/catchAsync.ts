@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-import envVars = require("../config/env");
+import type { Request, Response, NextFunction } from "express";
+import { envVars } from "../config/env.js";
 
 type AsyncHandler = (req: Request, res: Response, next: NextFunction) => Promise<void>
 
 export const catchAsync = (fn: AsyncHandler) => (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch((err: any) => {
-        if (envVars.envVars.NODE_ENV === "development") {
+        if (envVars.NODE_ENV === "development") {
             console.log(err)
         }
         next(err)

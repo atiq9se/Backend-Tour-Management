@@ -1,5 +1,5 @@
-import mongoose = require("mongoose")
-import type errorTypes = require("../interfaces/error.types")
+import mongoose from "mongoose"
+import type errorTypes from "../interfaces/error.types"
 
 export const handlerCastError = (err: mongoose.Error.CastError): errorTypes.TGenericErrorResponse=> {
     return{

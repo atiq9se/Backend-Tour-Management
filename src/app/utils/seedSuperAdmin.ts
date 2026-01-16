@@ -1,41 +1,39 @@
-import envVars = require("../config/env")
-import env = require("../config/env")
-import type IUser = require("../modules/user/user.interface");
-import type IAuthProvider = require("../modules/user/user.interface");
-import userInterface = require("../modules/user/user.interface")
-import userModel = require("../modules/user/user.model")
+import { envVars } from "../config/env.js";
+import { type IAuthProvider, type IUser, Role } from "../modules/user/user.interface.js";
+import { User } from "../modules/user/user.model.js";
 import bcryptjs from "bcryptjs";
 
-export const seedSuperAdmin = async()=>{
-    try{
-        const isSupperAdminExit = await userModel.User.findOne({email: env.envVars.SUPER_ADMIN_EMAIL})
-        if(isSupperAdminExit){
+export const seedSuperAdmin = async () => {
+    try {
+        const isSupperAdminExit = await User.findOne({ email: envVars.SUPER_ADMIN_EMAIL })
+        if (isSupperAdminExit) {
             console.log("super admin already exists")
             return;
         }
 
         console.log('try to crate super admin')
 
-        const hashedPassword = await bcryptjs.hash(env.envVars.SUPER_ADMIN_PASSWORD, Number(env.envVars.BCRYPT_SALT_ROUND))
+        const hashedPassword = await bcryptjs.hash(envVars.SUPER_ADMIN_PASSWORD, Number(envVars.BCRYPT_SALT_ROUND))
 
-        const authProvider: userInterface.IAuthProvider = {
+        const authProvider: IAuthProvider = {
             provider: "credentials",
-            providerId: env.envVars.SUPER_ADMIN_EMAIL
+            providerId: envVars.SUPER_ADMIN_EMAIL
         }
 
-        const payload: userInterface.IUser = {
+        const payload: IUser = {
             name: "Super admin",
-            role: userInterface.Role.SUPER_ADMIN,
-            email: env.envVars.SUPER_ADMIN_EMAIL,
+            email: envVars.SUPER_ADMIN_EMAIL,
+            age: 20, // Added default age as it is required in IUser but missing in original code
+            role: Role.SUPER_ADMIN,
             password: hashedPassword,
             isVerified: true,
             auths: [authProvider]
         }
 
-        const superadmin = await userModel.User.create(payload)
+        const superadmin = await User.create(payload)
         console.log(superadmin);
 
-    }catch(error){
+    } catch (error) {
 
     }
 }

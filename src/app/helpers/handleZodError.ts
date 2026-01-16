@@ -1,5 +1,5 @@
 
-import {TErrorSources, TGenericErrorResponse} from "../interfaces/error.types"
+import {type TErrorSources, type TGenericErrorResponse} from "../interfaces/error.types"
 
 export const handlerZodError = (err: any): errorTypes.TGenericErrorResponse=>{
     const errorSources: TErrorSources[] = []

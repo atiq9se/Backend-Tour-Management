@@ -1,6 +1,6 @@
-import mongoose = require("mongoose")
+import mongoose from "mongoose"
 import type errorTypes = require("../interfaces/error.types")
-import {TErrorSources} from "../interfaces/error.types"
+import {type TErrorSources} from "../interfaces/error.types"
 
 export const handlerValidationError = (err: mongoose.Error.ValidationError): errorTypes.TGenericErrorResponse => {
     const errorSources: TErrorSources[] = []

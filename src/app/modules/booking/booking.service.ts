@@ -6,6 +6,8 @@ import { Tour } from "../tour/tour.model.js";
 import { PAYMENT_STATUS } from "../payment/payment.interface.js";
 import { Booking } from "./booking.model.js";
 import { Payment } from "../payment/payment.model.js";
+import { SSLService } from "../sslCommerz/sslCommerz.service.js";
+import type { ISSLCommerz } from "../sslCommerz/sslCommerz.interface.js";
 
 const getTransactionId = ()=> {
     return `tran_${Date.now()}_${Math.floor(Math.random() *1000)}`
@@ -62,9 +64,38 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) =>{
             .populate("user", "name email phone address")
             .populate("tour", "title costFrom")
             .populate("payment")
+
+             const userAddress = (updatedBooking?.user as any).address;
+             const userEmail = (updatedBooking?.user as any).email;
+             const userName = (updatedBooking?.user as any).name;
+             const userPhone = (updatedBooking?.user as any).phone;
+
+
+            const sslPayload: ISSLCommerz = {
+                address: userAddress,
+                email: userEmail,
+                name: userName,
+                phoneNumber: userPhone,
+                amount: amount,
+                transactionId: transactionId
+            }
+            // const sslPayload: ISSLCommerz = {
+            //     address: user.address,
+            //     amount: amount,
+            //     email: user.email,
+            //     name: user.name,
+            //     phoneNumber: user.phone,
+            //     transactionId: transactionId
+            // }
+
+        const sslPayment = await SSLService.sslPaymentInit(sslPayload)
+
         await session.commitTransaction();
         session.endSession();
-        return updatedBooking
+        return {
+            payment: sslPayment,
+            booking: updatedBooking,
+        }
     }
     catch (error) {
         await session.abortTransaction();
